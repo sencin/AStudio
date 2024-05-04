@@ -44,7 +44,13 @@ public class grades extends AppCompatActivity {
 
         // Initialize RecyclerView and its adapter
 
-
+        rvGrades = findViewById(R.id.rvGrades);
+        GradeRecycleViewAdapter gradeAdapter = new GradeRecycleViewAdapter();
+        rvGrades.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rvGrades.setItemAnimator(new DefaultItemAnimator());
+        rvGrades.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        rvGrades.setAdapter(gradeAdapter);
+        
         // Set listener for spinner item selection
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -64,22 +70,17 @@ public class grades extends AppCompatActivity {
     }
     // Method to update grades based on selected school year
     private void updateGrades(String schoolYearId) {
-        rvGrades = findViewById(R.id.rvGrades);
-        GradeRecycleViewAdapter gradeAdapter = new GradeRecycleViewAdapter();
-        rvGrades.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        rvGrades.setItemAnimator(new DefaultItemAnimator());
-        rvGrades.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        rvGrades.setAdapter(gradeAdapter);
+        
         // Clear existing grade list
         studentGradeList.clear();
         // Get new grade list from database based on selected school year
         gradeAdapter.grade_list =da.getGrades(Integer.parseInt(schoolYearId));
         // Notify adapter of data change
-        rvGrades.setAdapter(gradeAdapter);
+       gradeAdapter.notifyDataSetChanged();
     }
 
     // Method to populate initial list of grades (dummy data)
     private List<StudentGrade> GetListofGrades() {
-        return da.getGrades(1);
+        return da.getGrades();
     }
 }
